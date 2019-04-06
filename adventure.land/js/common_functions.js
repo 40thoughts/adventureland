@@ -667,73 +667,36 @@ function to_pretty_float(a) {
     return b
 }
 function to_pretty_num(a) {
-    if (!a) {
-        return "0"
-    }
-    a = round(a);
-    var b = "";
-    while (a) {
-        var c = a % 1000;
-        if (!c) {
-            c = "000"
-        } else {
-            if (c < 10 && c != a) {
-                c = "00" + c
-            } else {
-                if (c < 100 && c != a) {
-                    c = "0" + c
-                }
-            }
-        }
-        if (!b) {
-            b = c
-        } else {
-            b = c + "," + b
-        }
-        a = (a - a % 1000) / 1000
-    }
-    return "" + b
+    return !a ? '0' : Math.round(a).toLocaleString('en');
 }
 function e_array(a) {
-    var c = [];
-    for (var b = 0; b < a; b++) {
-        c.push(null)
-    }
-    return c
+    return new Array(a).fill(null);
 }
 function set_xy(b, a, c) {
-    if ("real_x"in b) {
-        b.real_x = a,
-        b.real_y = c
+    if ("real_x" in b) {
+        b.real_x = a;
+        b.real_y = c;
     } else {
-        b.x = a,
-        b.y = c
+        b.x = a;
+        b.y = c;
     }
 }
 function get_xy(a) {
-    return [get_x(a), get_y(a)]
+    return [get_x(a), get_y(a)];
 }
 function get_x(a) {
-    if ("real_x"in a) {
-        return a.real_x
-    }
-    return a.x
+    return a.real_x || a.x;
 }
 function get_y(a) {
-    if ("real_y"in a) {
-        return a.real_y
-    }
-    return a.y
+    return a.real_y || a.y;
 }
 function simple_distance(e, d) {
-    var c = get_x(e)
-      , h = get_y(e)
-      , g = get_x(d)
-      , f = get_y(d);
-    if (e.map && d.map && e.map != d.map) {
-        return 9999999
+    if (e.map && d.map && (e.map != d.map)) {
+      return 9999999;
+      //return Infinity;    // TODO : I'd recommend this one but the rest of the code would have to be checked first !
     }
-    return Math.sqrt((c - g) * (c - g) + (h - f) * (h - f))
+    
+    return Math.sqrt(((get_x(e) - get_x(d)) ** 2) + ((get_y(e) - get_y(d)) ** 2));
 }
 function calculate_vxy(a, c) {
     if (!c) {
@@ -1009,7 +972,7 @@ function calculate_move(k, g, e) {
     return d
 }
 function point_distance(b, d, a, c) {
-    return Math.sqrt((a - b) * (a - b) + (c - d) * (c - d))
+    return Math.sqrt(((a - b) ** 2) + ((c - d) ** 2));
 }
 function recalculate_move(a) {
     move = calculate_move(a, a.going_x, a.going_y);
@@ -1459,7 +1422,7 @@ function to_title(a) {
     })
 }
 function ascending_comp(d, c) {
-    return d - c
+    return d - c;
 }
 function delete_indices(c, a) {
     a.sort(ascending_comp);
@@ -1500,39 +1463,39 @@ function in_arrD2(c, a) {
 }
 function c_round(a) {
     if (window.floor_xy) {
-        return Math.floor(a)
+        return Math.floor(a);
     }
     if (!window.round_xy) {
-        return a
+        return a;
     }
-    return Math.round(a)
+    return Math.round(a);
 }
 function round(a) {
-    return Math.round(a)
+    return Math.round(a);
 }
 function sq(a) {
-    return a * a
+    return a ** 2;
 }
 function sqrt(a) {
-    return Math.sqrt(a)
+    return Math.sqrt(a);
 }
 function floor(a) {
-    return Math.floor(a)
+    return Math.floor(a);
 }
 function ceil(a) {
-    return Math.ceil(a)
+    return Math.ceil(a);
 }
 function eps_equal(d, c) {
-    return Math.abs(d - c) < 5 * EPS
+    return Math.abs(d - c) < 5 * EPS;
 }
 function abs(a) {
-    return Math.abs(a)
+    return Math.abs(a);
 }
 function min(d, c) {
-    return Math.min(d, c)
+    return Math.min(d, c);
 }
 function max(d, c) {
-    return Math.max(d, c)
+    return Math.max(d, c);
 }
 function shuffle(c) {
     var d, b, e;
@@ -1545,37 +1508,18 @@ function shuffle(c) {
     return c
 }
 function random_binary() {
-    var b = "";
-    for (var a = 0; a < 2 + parseInt(Math.random() * 12); a++) {
-        if (Math.random() < 0.5) {
-            b += "0"
-        } else {
-            b += "1"
-        }
+    let b = "";
+    for (let a = 0; a < 2 + ((Math.random() * 12) | 0); a++) {
+        b += Math.random() < 0.5 ? "0" : "1";
     }
-    return b
+    return b;
 }
 function random_binaries() {
-    var b = "";
-    for (var a = 0; a < 7 + parseInt(Math.random() * 23); a++) {
-        b += random_binary() + " "
+    let b = "";
+    for (let a = 0; a < 7 + ((Math.random() * 23) | 0); a++) {    // A binary 'OR' is quicker than parseInt to get an integer
+        b += random_binary() + " ";
     }
-    return b
-}
-function randomStr(a) {
-    var e = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz"
-      , c = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-    var f = "";
-    for (var d = 0; d < a; d++) {
-        if (d == 0) {
-            var b = Math.floor(Math.random() * c.length);
-            f += c.substring(b, b + 1)
-        } else {
-            var b = Math.floor(Math.random() * e.length);
-            f += e.substring(b, b + 1)
-        }
-    }
-    return f
+    return b;
 }
 function lstack(a, c, b) {
     a.unshift(c);
@@ -1585,65 +1529,56 @@ function lstack(a, c, b) {
 }
 String.prototype.toTitleCase = function() {
     return this.replace(/\w\S*/g, function(a) {
-        return a.charAt(0).toUpperCase() + a.substr(1).toLowerCase()
+        return a.charAt(0).toUpperCase() + a.substr(1).toLowerCase();
     })
 }
 ;
 String.prototype.replace_all = function(c, a) {
     var b = this;
-    return b.replace(new RegExp(c.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"),"g"), a)
+    return b.replace(new RegExp(c.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"),"g"), a);
 }
 ;
 function html_escape(a) {
     var d = a;
     var b = [[/&/g, "&amp;"], [/</g, "&lt;"], [/>/g, "&gt;"], [/"/g, "&quot;"]];
     for (var c in b) {
-        d = d.replace(b[c][0], b[c][1])
+        d = d.replace(b[c][0], b[c][1]);
     }
-    return d
+    return d;
 }
 function he(a) {
-    return html_escape(a)
+    return html_escape(a);
 }
 function future_ms(a) {
     var b = new Date();
     b.setMilliseconds(b.getMilliseconds() + a);
-    return b
+    return b;
 }
 function future_s(a) {
     var b = new Date();
     b.setSeconds(b.getSeconds() + a);
-    return b
+    return b;
 }
-function mssince(a, b) {
-    if (!b) {
-        b = new Date()
-    }
-    return b.getTime() - a.getTime()
+function mssince(a, b = new Date()) {   // Set default value to not have to care about the condition
+    return b.getTime() - a.getTime();
 }
 function ssince(a, b) {
-    return mssince(a, b) / 1000
+    return mssince(a, b) / 1000;
 }
 function msince(a, b) {
-    return mssince(a, b) / 60000
+    return mssince(a, b) / 60000;
 }
 function hsince(a, b) {
-    return mssince(a, b) / 3600000
+    return mssince(a, b) / 3600000;
 }
 function randomStr(a) {
-    var e = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz"
-      , c = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-    var f = "";
-    for (var d = 0; d < a; d++) {
-        if (d == 0) {
-            var b = Math.floor(Math.random() * c.length);
-            f += c.substring(b, b + 1)
-        } else {
-            var b = Math.floor(Math.random() * e.length);
-            f += e.substring(b, b + 1)
-        }
+    const e = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz",
+          c = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+    let f = "";
+    for (let d = 0; d < a; d++) {
+        f += d == 0 ? c[Math.floor(Math.random() * c.length)] : e[Math.floor(Math.random() * e.length)];    // the ternary operator makes a pretty one liner
     }
-    return f
+    return f;
 }
 function log_trace(a, b) {
     console.log("\n====================");
@@ -1661,30 +1596,30 @@ function log_trace(a, b) {
     console.log("====================\n")
 }
 function rough_size(d) {
-    var c = [];
-    var a = [d];
-    var b = 0;
+    let c = new Array();
+    let a = [d];
+    let b = 0;
     while (a.length) {
-        var f = a.pop();
-        if (typeof f === "boolean") {
-            b += 4
-        } else {
-            if (typeof f === "string") {
-                b += f.length * 2
-            } else {
-                if (typeof f === "number") {
-                    b += 8
-                } else {
-                    if (typeof f === "object" && c.indexOf(f) === -1) {
-                        c.push(f);
-                        for (var e in f) {
-                            a.push(f[e])
-                        }
-                    }
+        let f = a.pop();
+        switch (typeof f) {                   // Much more efficient than deeply nested else/if checks, switches directly to the good case instead of checking everything
+          case "boolean":
+              b += 4;
+              break;
+          case "string":
+              b += f.length * 2;
+              break;
+          case "number":
+              b += 8;
+              break;
+          case "object":
+              if (c.indexOf(f) === -1) {      // TODO : Can't figure out what this condition is meant for since it will always be true from what I understand
+                c.push(f);
+                for (let e in f) {
+                    a.push(f[e]);
                 }
-            }
+              }
+              break;
         }
     }
-    return b
+    return b;
 }
-;
